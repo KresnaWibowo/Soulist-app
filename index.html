@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soulis — Editorial Mood Tracker &amp; Emotional Accumulation</title>
+  <meta name="description" content="Ruang tenang untuk melacak emosi harian, jurnal syukur mingguan, sensasi tubuh, dan akumulasi mood jangka panjang." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+</head>
+<body>
+  <!-- Subtle Soft Pink & Warm Yellow Ambient Canvas -->
+  <div class="ambient-canvas" aria-hidden="true">
+    <div class="ambient-wash ambient-wash--top"></div>
+    <div class="ambient-wash ambient-wash--side"></div>
+  </div>
+
+  <!-- ==================== AUTH SCREEN (LOGIN & REGISTER) ==================== -->
+  <section class="auth-screen" id="auth-screen" aria-label="Masuk atau Daftar Soulis">
+    <div class="auth-layout">
+      <div class="auth-editorial">
+        <div class="auth-brand">
+          <span class="brand__orb" aria-hidden="true"></span>
+          <span class="brand__wordmark">Soulis</span>
+        </div>
+
+        <div class="auth-aura-orb" aria-hidden="true"></div>
+
+        <h1 class="display-serif">
+          A quieter space to notice how you <span class="accent-italic">feel.</span>
+        </h1>
+        <p class="lead-copy">
+          Catat energi, kualitas tidur, nuansa emosi, jurnal syukur 7 hari, hingga akumulasi akhir mood Anda dalam satu kanvas editorial yang tenang.
+        </p>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Pilih masuk atau daftar">
+          <button class="auth-tabs__btn is-active" id="auth-tab-login" type="button">Sign in</button>
+          <button class="auth-tabs__btn" id="auth-tab-register" type="button">Create account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form" id="auth-login-form" novalidate>
+          <div class="field-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="nama@email.com" autocomplete="email" required />
+          </div>
+
+          <div class="field-group">
+            <label for="login-password">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="login-password" placeholder="Masukkan password" autocomplete="current-password" required />
+              <button class="pw-toggle" type="button" data-toggle-pw="login-password" aria-label="Tampilkan password">Show</button>
+            </div>
+          </div>
+
+          <p class="auth-error" id="login-error" role="alert" hidden></p>
+
+          <button class="btn-ink btn-ink--lg auth-submit" type="submit">Sign in to Soulis</button>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="auth-register-form" novalidate hidden>
+          <div class="field-group">
+            <label for="reg-name">First name</label>
+            <input type="text" id="reg-name" placeholder="Nama panggilan Anda" maxlength="28" autocomplete="given-name" required />
+          </div>
+
+          <div class="field-group">
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" placeholder="nama@email.com" autocomplete="email" required />
+          </div>
+
+          <div class="field-group">
+            <label for="reg-password">Password</label>
+            <div class="password-wrap">
+              <input type="password" id="reg-password" placeholder="Minimal 6 karakter" autocomplete="new-password" required />
+              <button class="pw-toggle" type="button" data-toggle-pw="reg-password" aria-label="Tampilkan password">Show</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="reg-confirm">Confirm password</label>
+            <input type="password" id="reg-confirm" placeholder="Ulangi password" autocomplete="new-password" required />
+          </div>
+
+          <p class="auth-error" id="register-error" role="alert" hidden></p>
+
+          <button class="btn-ink btn-ink--lg auth-submit" type="submit">Create account</button>
+        </form>
+
+        <div class="auth-divider"><span>atau</span></div>
+
+        <button class="btn-outline-pill auth-demo-btn" id="btn-demo-login" type="button">
+          Continue with Demo Account (Larissa) &rarr;
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MAIN APP SHELL (LOGGED IN) ==================== -->
+  <div id="app-wrapper" hidden>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a href="#today" class="brand" data-nav="today" aria-label="Soulis Home">
+          <span class="brand__orb" id="brand-aura-dot" aria-hidden="true"></span>
+          <span class="brand__wordmark">Soulis</span>
+        </a>
+
+        <nav class="nav-pill" aria-label="Primary Navigation">
+          <button class="nav-pill__item is-active" data-nav="today" type="button">Today</button>
+          <button class="nav-pill__item" data-nav="accumulation" type="button">Accumulation</button>
+          <button class="nav-pill__item" data-nav="explore" type="button">Explore</button>
+          <button class="nav-pill__item" data-nav="subscription" type="button">Subscription</button>
+        </nav>
+
+        <div class="topbar__actions">
+          <button class="profile-chip" id="btn-open-account" type="button" title="Account &amp; Sign out">
+            <span class="profile-chip__avatar" id="topbar-avatar-initial" aria-hidden="true">L</span>
+            <span id="topbar-user-name">Larissa</span>
+          </button>
+          <button class="btn-ink btn-ink--sm" id="btn-topbar-checkin" type="button">
+            <span aria-hidden="true">+</span> Check in
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="shell">
+      <!-- ==================== VIEW 1: TODAY ==================== -->
+      <section class="view is-active" id="view-today" aria-labelledby="today-heading">
+        <div class="today-hero">
+          <div class="today-hero__lead">
+            <p class="eyebrow-greeting" id="today-greeting">Good afternoon, Larissa</p>
+            <p class="today-date" id="today-date">Wednesday, November 18</p>
+
+            <div class="hero-aura-stage">
+              <div class="aura-orb aura-orb--hero" id="today-hero-orb" aria-hidden="true"></div>
+            </div>
+
+            <h1 class="display-serif" id="today-heading">
+              How are you <span class="accent-italic">feeling?</span>
+            </h1>
+            <p class="lead-copy">
+              A quiet, unhurried check-in across energy, sleep, emotion, and body—woven into your living mood portrait.
+            </p>
+
+            <div class="hero-cta-row">
+              <button class="btn-ink btn-ink--lg" id="btn-start-checkin" type="button">
+                <span class="plus-glyph" aria-hidden="true">+</span> Check in now
+              </button>
+              <button class="btn-ghost" id="btn-jump-accumulation" type="button">
+                View mood accumulation <span aria-hidden="true">&rarr;</span>
+              </button>
+            </div>
+          </div>
+
+          <aside class="today-hero__card-wrap" aria-label="Latest emotional check-in">
+            <div class="editorial-card last-checkin-summary" id="last-checkin-card">
+              <div class="last-checkin-summary__head">
+                <div>
+                  <span class="micro-label">LAST CHECK IN</span>
+                  <p class="last-checkin-card__time" id="last-checkin-time">Today at 17:30</p>
+                </div>
+                <div class="last-checkin-summary__orb" id="last-checkin-orb" aria-hidden="true"></div>
+              </div>
+
+              <h2 class="last-checkin-card__title" id="last-checkin-category">Anxiety</h2>
+              <p class="last-checkin-card__emotions" id="last-checkin-emotions">Nervous, restless, uneasy</p>
+
+              <div class="last-checkin-card__meta" id="last-checkin-meta">
+                <span class="soft-pill">Energy 5/10</span>
+                <span class="soft-pill">Body: Tight</span>
+                <span class="soft-pill">Sleep: So-so</span>
+              </div>
+
+              <p class="last-checkin-summary__influences muted-meta" id="last-checkin-influences">
+                Influenced by: Work
+              </p>
+            </div>
+          </aside>
+        </div>
+
+        <hr class="quiet-divider" />
+
+        <!-- 7-Day Weekly Gratitude & Journal Tracker -->
+        <section class="program-section" aria-labelledby="journal-week-title">
+          <div class="section-head-split">
+            <div>
+              <span class="micro-label">WEEKLY JOURNAL TRACKER</span>
+              <h2 class="section-serif" id="journal-week-title">7-Day Gratitude &amp; Reflection</h2>
+            </div>
+
+            <div class="week-badge-pill">
+              <span class="pin-circle" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20h9"/>
+                  <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"/>
+                </svg>
+              </span>
+              <div>
+                <span class="micro-label">THIS WEEK</span>
+                <strong class="week-badge-pill__title">Daily Journal</strong>
+              </div>
+              <span class="week-badge-pill__count" id="journal-progress-count">0/7</span>
+            </div>
+          </div>
+
+          <div class="dot-track" id="journal-dot-track" aria-label="7-day journal progress"></div>
+
+          <div class="week-winding-wrap">
+            <svg class="week-winding-svg" viewBox="0 0 1120 190" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M 75 110 C 160 110, 175 45, 255 45 C 335 45, 355 135, 440 135 C 525 135, 540 48, 625 48 C 710 48, 730 135, 815 135 C 900 135, 920 52, 995 52 C 1045 52, 1065 100, 1085 100"
+                    fill="none" stroke="#E9D6DD" stroke-width="2.5" stroke-dasharray="4 9" stroke-linecap="round" />
+            </svg>
+            <div class="week-days-path" id="week-days-path"></div>
+          </div>
+        </section>
+
+        <!-- Your Quick Relief (Strictly 2 Challenges, No Subtitle Above Heading) -->
+        <section class="relief-section" aria-labelledby="quick-relief-heading">
+          <div class="section-head-split">
+            <div>
+              <h2 class="section-serif" id="quick-relief-heading">Your Quick Relief</h2>
+            </div>
+            <button class="text-link" data-nav="explore" type="button">Open Explore &rarr;</button>
+          </div>
+
+          <div class="relief-duet">
+            <button class="relief-tile" data-breath-open="true" type="button">
+              <div class="relief-tile__visual relief-tile__visual--breath">
+                <span class="badge-glass">7 days &bull; Guided</span>
+              </div>
+              <div class="relief-tile__info">
+                <h3>7-day breath reset</h3>
+                <p>Soften chest tightness and downshift your nervous system with 4-4-6 cadence</p>
+              </div>
+            </button>
+
+            <button class="relief-tile" data-meditation-open="forest-rain" type="button">
+              <div class="relief-tile__visual relief-tile__visual--meditation">
+                <span class="badge-glass">Nature &amp; Yoga Sound</span>
+              </div>
+              <div class="relief-tile__info">
+                <h3>Meditation</h3>
+                <p>Relaxing nature rain, forest stream, ocean tide, and warm yoga singing bowls</p>
+              </div>
+            </button>
+          </div>
+        </section>
+      </section>
+
+      <!-- ==================== VIEW 2: ACCUMULATION ==================== -->
+      <section class="view" id="view-accumulation" aria-labelledby="acc-heading">
+        <div class="section-head-split acc-header">
+          <div>
+            <span class="micro-label">AKUMULASI AKHIR MOOD</span>
+            <h1 class="display-serif" id="acc-heading">
+              Your emotional <span class="accent-italic">accumulation</span>
+            </h1>
+            <p class="lead-copy">
+              Every check-in dissolves into one living spectrum—revealing your dominant aura, somatic patterns, and what quietly shapes your days.
+            </p>
+          </div>
+
+          <div class="period-switch" role="group" aria-label="Accumulation Timeframe">
+            <button class="period-switch__btn is-active" data-period="7" type="button">7 Days</button>
+            <button class="period-switch__btn" data-period="30" type="button">30 Days <span class="plus-tag">Plus</span></button>
+            <button class="period-switch__btn" data-period="90" type="button">Season <span class="plus-tag">Plus</span></button>
+          </div>
+        </div>
+
+        <div class="acc-synthesis-band">
+          <div class="acc-aura-canvas">
+            <div class="dominant-aura-sphere" id="acc-dominant-sphere" aria-hidden="true"></div>
+            <div class="acc-aura-caption">
+              <span class="micro-label">DOMINANT AURA</span>
+              <strong class="acc-aura-caption__name" id="acc-dominant-name">Quiet Caution &amp; Soft Calm</strong>
+              <span class="muted-meta" id="acc-checkin-total">Based on 14 check-ins</span>
+            </div>
+          </div>
+
+          <div class="acc-composition">
+            <p class="acc-narrative" id="acc-narrative">
+              Over this window, calm and quiet vigilance sit side by side. Better sleep nights noticeably widen your capacity for ease.
+            </p>
+
+            <div class="emotion-bars" id="acc-emotion-bars"></div>
+
+            <div class="acc-vital-row">
+              <div class="vital-stat">
+                <span class="micro-label">AVG ENERGY</span>
+                <strong class="vital-stat__num" id="acc-avg-energy">5.6 / 10</strong>
+              </div>
+              <div class="vital-stat">
+                <span class="micro-label">RESTED NIGHTS</span>
+                <strong class="vital-stat__num" id="acc-sleep-rate">57%</strong>
+              </div>
+              <div class="vital-stat">
+                <span class="micro-label">TOP BODY SIGNAL</span>
+                <strong class="vital-stat__num" id="acc-top-body">Tight</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="quiet-divider" />
+
+        <section class="acc-insights-section" aria-labelledby="correlations-heading">
+          <div class="section-head-split">
+            <div>
+              <span class="micro-label">TRIGGER-TO-MOOD CORRELATIONS</span>
+              <h2 class="section-serif" id="correlations-heading">Patterns woven beneath the surface</h2>
+            </div>
+            <span class="muted-meta" id="correlation-lock-note">Live calculation from your check-ins</span>
+          </div>
+
+          <div class="insights-flow" id="acc-insights-list"></div>
+        </section>
+
+        <hr class="quiet-divider" />
+
+        <section class="acc-calendar-section" aria-labelledby="calendar-heading">
+          <div class="section-head-split">
+            <div>
+              <span class="micro-label">MOOD CALENDAR &amp; HEATMAP</span>
+              <h2 class="section-serif" id="calendar-heading">Aura Rhythm</h2>
+            </div>
+            <div class="calendar-legend" aria-label="Aura Legend">
+              <span><i class="legend-dot legend-dot--joy"></i> Joy</span>
+              <span><i class="legend-dot legend-dot--calm"></i> Calm</span>
+              <span><i class="legend-dot legend-dot--anxiety"></i> Anxiety</span>
+              <span><i class="legend-dot legend-dot--sadness"></i> Sadness</span>
+              <span><i class="legend-dot legend-dot--anger"></i> Anger</span>
+            </div>
+          </div>
+
+          <div class="calendar-editorial-split">
+            <div class="calendar-board" id="acc-calendar-grid"></div>
+
+            <aside class="day-inspector" id="acc-day-inspector">
+              <span class="micro-label">DAY DETAIL</span>
+              <h3 class="day-inspector__date" id="inspector-date">Select any glowing day</h3>
+              <div class="day-inspector__body" id="inspector-body">
+                <p class="muted-meta">Tap an aura dot on the calendar to revisit your emotions, body state, and daily influences.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <hr class="quiet-divider" />
+
+        <section class="wrapped-section" aria-labelledby="wrapped-heading">
+          <div class="wrapped-sheet">
+            <div class="wrapped-sheet__copy">
+              <span class="micro-label">SOULIS MONTHLY WRAPPED</span>
+              <h2 class="section-serif" id="wrapped-heading">Your End-of-Period Portrait</h2>
+              <p class="lead-copy">
+                Distill your emotional accumulation into an archival visual card or printable reflection folio.
+              </p>
+              <div class="wrapped-summary-pills" id="wrapped-summary-pills"></div>
+              <div class="hero-cta-row">
+                <button class="btn-ink btn-ink--lg" id="btn-download-wrapped" type="button">
+                  Download Wrapped PNG
+                </button>
+                <button class="btn-ghost" id="btn-print-wrapped" type="button">
+                  Save as PDF / Print
+                </button>
+              </div>
+            </div>
+            <div class="wrapped-sheet__preview">
+              <div class="wrapped-poster" id="wrapped-poster-preview">
+                <span class="micro-label">SOULIS WRAPPED</span>
+                <div class="wrapped-poster__orb" id="wrapped-poster-orb"></div>
+                <h3 class="wrapped-poster__title" id="wrapped-poster-title">Quiet Caution</h3>
+                <p class="wrapped-poster__sub" id="wrapped-poster-sub">14 moments witnessed &bull; Primary thread: Calm &amp; Anxiety</p>
+                <p class="wrapped-poster__quote" id="wrapped-poster-quote">
+                  &ldquo;One direction you trust a little is enough to go on.&rdquo;
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ==================== VIEW 3: EXPLORE (ONLY CHALLENGES & LIBRARY) ==================== -->
+      <section class="view" id="view-explore" aria-labelledby="explore-heading">
+        <div class="section-head-split">
+          <div>
+            <span class="micro-label">CURATED PRACTICES</span>
+            <h1 class="display-serif" id="explore-heading">Explore</h1>
+          </div>
+
+          <div class="subtab-pill" role="tablist" aria-label="Explore sections">
+            <button class="subtab-pill__item is-active" data-explore-tab="challenges" type="button">Challenges</button>
+            <button class="subtab-pill__item" data-explore-tab="library" type="button">Library</button>
+          </div>
+        </div>
+
+        <!-- Tab: Challenges (Strictly 2 Challenges) -->
+        <div class="explore-panel is-active" id="explore-challenges">
+          <div class="explore-duet explore-challenges-pair">
+            <article class="editorial-tile">
+              <div class="editorial-tile__visual editorial-tile__visual--breath">
+                <div class="tag-cluster">
+                  <span class="badge-rose">Picked for you</span>
+                  <span class="badge-glass">7 days</span>
+                </div>
+                <div class="breath-aura-visual" aria-hidden="true"></div>
+              </div>
+              <div class="editorial-tile__body">
+                <h3>7-day breath reset</h3>
+                <p>Master your nervous system with five-minute 4-4-6 somatic breathing rituals for tense afternoons.</p>
+                <button class="btn-ink btn-ink--sm" data-breath-open="true" type="button">
+                  Begin Breath Reset &rarr;
+                </button>
+              </div>
+            </article>
+
+            <article class="editorial-tile">
+              <div class="editorial-tile__visual editorial-tile__visual--meditation">
+                <div class="tag-cluster">
+                  <span class="badge-glass">Nature &amp; Yoga Sound</span>
+                </div>
+              </div>
+              <div class="editorial-tile__body">
+                <h3>Meditation</h3>
+                <p>Relaxing nature rain, forest stream, ocean tide, and warm yoga singing bowls to unwind gently.</p>
+                <button class="btn-ink btn-ink--sm" data-meditation-open="forest-rain" type="button">
+                  Listen &amp; Meditate &rarr;
+                </button>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Tab: Library -->
+        <div class="explore-panel" id="explore-library">
+          <h2 class="section-serif">Relaxing Soundscapes</h2>
+          <div class="relief-trio">
+            <button class="relief-tile" data-meditation-open="forest-rain" type="button">
+              <div class="relief-tile__visual relief-tile__visual--water">
+                <span class="badge-glass">Nature Sound</span>
+              </div>
+              <div class="relief-tile__info">
+                <h3>Forest Rain &amp; Stream</h3>
+                <p>Soft woodland rain and gentle flowing water</p>
+              </div>
+            </button>
+
+            <button class="relief-tile" data-meditation-open="yoga-bowl" type="button">
+              <div class="relief-tile__visual relief-tile__visual--autumn">
+                <span class="badge-glass">Yoga &bull; 432Hz</span>
+              </div>
+              <div class="relief-tile__info">
+                <h3>Yoga Singing Bowl</h3>
+                <p>Warm harmonic resonance for stretching and stillness</p>
+              </div>
+            </button>
+
+            <button class="relief-tile" data-meditation-open="ocean-tide" type="button">
+              <div class="relief-tile__visual relief-tile__visual--meditation">
+                <span class="badge-glass">Nature Sound</span>
+              </div>
+              <div class="relief-tile__info">
+                <h3>Ocean Tide</h3>
+                <p>Slow rhythmic coastal waves rising and receding</p>
+              </div>
+            </button>
+          </div>
+
+          <hr class="quiet-divider" />
+
+          <h2 class="section-serif">How The Stress Works</h2>
+          <div class="explore-duet">
+            <article class="editorial-tile">
+              <div class="editorial-tile__visual editorial-tile__visual--prism">
+                <span class="badge-glass">Artikel &bull; 7 menit baca</span>
+                <svg class="prism-mini-svg" viewBox="0 0 180 170" aria-hidden="true">
+                  <polygon points="90,12 162,64 134,150 46,150 18,64" fill="none" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="90" y1="88" x2="90" y2="12" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="90" y1="88" x2="162" y2="64" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="90" y1="88" x2="134" y2="150" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="90" y1="88" x2="46" y2="150" stroke="#fff" stroke-width="1.5"/>
+                  <line x1="90" y1="88" x2="18" y2="64" stroke="#fff" stroke-width="1.5"/>
+                  <text x="90" y="45" text-anchor="middle" fill="#2B2124" font-size="13" font-weight="600">P</text>
+                  <text x="132" y="75" text-anchor="middle" fill="#2B2124" font-size="13" font-weight="600">R</text>
+                  <text x="116" y="128" text-anchor="middle" fill="#2B2124" font-size="13" font-weight="600">I</text>
+                  <text x="64" y="128" text-anchor="middle" fill="#2B2124" font-size="13" font-weight="600">S</text>
+                  <text x="48" y="75" text-anchor="middle" fill="#2B2124" font-size="13" font-weight="600">M</text>
+                </svg>
+              </div>
+              <div class="editorial-tile__body">
+                <h3>Inside Your Stress PRISM: Lima Dimensi Tenang yang Membentuk Penumpukan Emosi</h3>
+                <p>Mengamati Perspective, Regulation, Identity, Somatics, dan Meaning di balik kelelahan harian.</p>
+                <button class="text-link" data-article="prism" type="button">Baca artikel lengkap &rarr;</button>
+              </div>
+            </article>
+
+            <article class="editorial-tile">
+              <div class="editorial-tile__visual editorial-tile__visual--ally">
+                <span class="badge-glass">Artikel &bull; 7 menit baca</span>
+              </div>
+              <div class="editorial-tile__body">
+                <h3>Understanding Stress: Your Ally or Burden? Ketika Kewaspadaan Dianggap Kelemahan</h3>
+                <p>Membedakan stres singkat yang menjaga fokus dari beban menahun yang mengganggu tidur dan ritme harian.</p>
+                <button class="text-link" data-article="ally" type="button">Baca artikel lengkap &rarr;</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 4: SUBSCRIPTION (NO DIGITAL EDITIONS) ==================== -->
+      <section class="view" id="view-subscription" aria-labelledby="plus-heading">
+        <div class="section-head-split">
+          <div>
+            <span class="micro-label">SUBSCRIPTION</span>
+            <h1 class="display-serif" id="plus-heading">
+              Keep what <span class="accent-italic">stays with you</span>
+            </h1>
+            <p class="lead-copy">
+              Begin freely every day, or open long-horizon emotional accumulation and full archival reports with Soulis Plus.
+            </p>
+          </div>
+
+          <div class="billing-toggle" role="group" aria-label="Billing Interval">
+            <button class="billing-toggle__btn is-active" data-billing="monthly" type="button">Monthly</button>
+            <button class="billing-toggle__btn" data-billing="annual" type="button">Annual (Save 35%)</button>
+          </div>
+        </div>
+
+        <div class="tiers-layout">
+          <article class="tier-sheet">
+            <span class="micro-label">SOULIS BASIC</span>
+            <h2 class="section-serif">Daily Presence</h2>
+            <p class="tier-price">Free <span>forever</span></p>
+            <p class="muted-meta">Designed to make checking in gentle, visual, and sustainable.</p>
+            <ul class="quiet-list">
+              <li>Complete 5-layer check-in (Energy, Sleep, Emotion, Body, Triggers)</li>
+              <li>7-day Weekly Gratitude &amp; Reflection Journal tracker</li>
+              <li>7-day Mood Accumulation Aura &amp; summary</li>
+              <li>7-day breath reset &amp; starter meditation soundscape</li>
+            </ul>
+            <button class="btn-outline-pill" type="button" data-nav="today">Current Free Foundation</button>
+          </article>
+
+          <article class="tier-sheet tier-sheet--plus">
+            <div class="tier-sheet__glow" aria-hidden="true"></div>
+            <span class="micro-label">SOULIS PLUS</span>
+            <h2 class="section-serif">Long-Horizon Accumulation</h2>
+            <p class="tier-price" id="plus-price-label">Rp 35.000 <span>/ month</span></p>
+            <p class="muted-meta">Deep seasonal pattern memory, archival reports, and full library access.</p>
+            <ul class="quiet-list">
+              <li>Monthly, Quarterly &amp; Annual Mood Accumulation Aura</li>
+              <li>Automated Trigger-to-Sleep-to-Mood Correlation Engine</li>
+              <li>Downloadable Soulis Monthly Wrapped PNG &amp; PDF Folios</li>
+              <li>Full Nature &amp; Yoga Meditation Sound Library + Stress Essays</li>
+              <li>Unlimited Weekly Gratitude Journal Archive</li>
+            </ul>
+            <div class="tier-sheet__actions">
+              <button class="btn-ink btn-ink--lg" id="btn-toggle-plus-demo" type="button">
+                Preview Soulis Plus Unlocked
+              </button>
+              <span class="muted-meta" id="plus-demo-status">Currently viewing: Basic mode</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== 5-STEP CHECK-IN STUDIO OVERLAY ==================== -->
+  <div class="checkin-overlay" id="checkin-overlay" role="dialog" aria-modal="true" aria-label="Daily Mood Check-in" hidden>
+    <div class="checkin-overlay__bar">
+      <button class="icon-circle-btn" id="checkin-back" type="button" aria-label="Previous step">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-track__fill" id="checkin-progress-fill"></div>
+      </div>
+
+      <button class="icon-circle-btn" id="checkin-close" type="button" aria-label="Close check-in">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="checkin-stage">
+      <div class="checkin-step is-active" data-step="1">
+        <h2 class="step-serif">How much <span class="accent-italic">energy</span><br/>is in you right now?</h2>
+        <p class="step-sub">Honestly before anything else</p>
+
+        <div class="energy-orb-stage">
+          <div class="aura-orb aura-orb--energy" id="energy-live-orb" aria-hidden="true"></div>
+        </div>
+
+        <div class="energy-readout">
+          <strong class="energy-readout__num" id="energy-value-num">5</strong>
+          <span class="energy-readout__label" id="energy-value-label">It's okay</span>
+        </div>
+
+        <div class="slider-wrap">
+          <input type="range" min="0" max="10" value="5" id="energy-slider" aria-label="Energy level from 0 to 10" />
+          <div class="slider-ends">
+            <span>0</span>
+            <span>10</span>
+          </div>
+        </div>
+
+        <button class="btn-ink btn-ink--wide" id="step1-next" type="button">Continue &rarr;</button>
+      </div>
+
+      <div class="checkin-step" data-step="2">
+        <h2 class="step-serif">How was your <span class="accent-italic">sleep?</span></h2>
+        <p class="step-sub">Last night, roughly</p>
+
+        <div class="sleep-stack" id="sleep-options">
+          <button class="choice-pill-row" data-sleep="Slept well" type="button">
+            <span class="choice-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z"/>
+              </svg>
+            </span>
+            <span>Slept well</span>
+          </button>
+
+          <button class="choice-pill-row" data-sleep="So-so" type="button">
+            <span class="choice-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <path d="M16 14a4 4 0 0 0-8 0"/>
+                <path d="M6 17h12a3 3 0 0 0 .5-5.95A4.5 4.5 0 0 0 9.6 9.4"/>
+              </svg>
+            </span>
+            <span>So-so</span>
+          </button>
+
+          <button class="choice-pill-row" data-sleep="Barely slept" type="button">
+            <span class="choice-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+                <circle cx="12" cy="12" r="4"/>
+                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+              </svg>
+            </span>
+            <span>Barely slept</span>
+          </button>
+        </div>
+
+        <button class="btn-ink btn-ink--wide" id="step2-next" type="button" disabled>Continue &rarr;</button>
+      </div>
+
+      <div class="checkin-step" data-step="3">
+        <h2 class="step-serif">What are you <span class="accent-italic">feeling</span> right now?</h2>
+        <p class="step-sub">Tap a feeling and choose the word that sits closest &ndash; up to three</p>
+
+        <div class="selected-emotions-bar" id="selected-emotions-bar">
+          <span class="muted-meta">Tap an aura below to explore nuances</span>
+        </div>
+
+        <div class="emotion-constellation" id="emotion-overview"></div>
+
+        <div class="emotion-cluster-view" id="emotion-cluster" hidden>
+          <button class="back-constellation-btn" id="btn-back-constellation" type="button">
+            &larr; All feelings
+          </button>
+          <div class="cluster-canvas" id="cluster-canvas"></div>
+        </div>
+
+        <button class="btn-ink btn-ink--wide" id="step3-next" type="button" disabled>Continue &rarr;</button>
+      </div>
+
+      <div class="checkin-step" data-step="4">
+        <h2 class="step-serif">What do you feel<br/>in your <span class="accent-italic">body?</span></h2>
+        <p class="step-sub">The one that's closest</p>
+
+        <div class="body-matrix" id="body-options"></div>
+
+        <button class="btn-ink btn-ink--wide" id="step4-next" type="button" disabled>Continue &rarr;</button>
+      </div>
+
+      <div class="checkin-step" data-step="5">
+        <h2 class="step-serif">What <span class="accent-italic">influenced</span> you<br/>today?</h2>
+        <p class="step-sub">Tap what played a part &ndash; or add your own words</p>
+
+        <div class="influence-cloud" id="influence-cloud"></div>
+
+        <form class="custom-word-form" id="custom-word-form">
+          <input type="text" id="custom-word-input" placeholder="Add your own word..." maxlength="28" autocomplete="off" />
+          <button type="submit" class="send-word-btn" aria-label="Add custom influence word">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
+        </form>
+        <p class="private-memory-note">Free words stay in your private memory</p>
+
+        <button class="btn-ink btn-ink--wide" id="step5-finish" type="button">Save today's check-in &rarr;</button>
+      </div>
+
+      <div class="checkin-step" data-step="6">
+        <div class="checkin-done-sheet">
+          <div class="aura-orb aura-orb--hero" id="result-summary-orb" aria-hidden="true"></div>
+          <span class="badge-rose" id="result-summary-category">CHECK-IN SAVED</span>
+          <h2 class="step-serif" id="result-summary-words">Nervous, restless, uneasy</h2>
+          <p class="step-sub" id="result-summary-meta">Energy 5/10 &bull; Body: Tight &bull; Sleep: So-so</p>
+
+          <div class="hero-cta-row" style="justify-content:center; margin-top:34px;">
+            <button class="btn-ink btn-ink--lg" id="btn-finish-checkin" type="button">
+              Back to Today
+            </button>
+            <button class="btn-outline-pill" id="btn-result-to-journal" type="button">
+              Write today's gratitude journal &rarr;
+            </button>
+          </div>
+
+          <div class="result-relief-suggest" style="width:100%; max-width:460px;">
+            <span class="micro-label">YOUR QUICK RELIEF</span>
+            <div class="result-relief-links" style="justify-content:center;">
+              <button class="text-link" data-breath-open="true" type="button">7-day breath reset &rarr;</button>
+              <button class="text-link" data-meditation-open="forest-rain" type="button">Relaxing Meditation &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DAILY JOURNAL WRITING MODAL ==================== -->
+  <div class="journal-modal" id="modal-journal" role="dialog" aria-modal="true" aria-label="Daily Gratitude Journal" hidden>
+    <div class="journal-modal__backdrop"></div>
+    <div class="journal-modal__inner">
+      <div class="ambient-modal__top">
+        <button class="icon-circle-btn icon-circle-btn--light" id="journal-close" type="button" aria-label="Close journal">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <span class="ambient-modal__day" id="journal-day-kicker">DAY 1</span>
+        <span class="journal-modal__status" id="journal-saved-pill">Draft</span>
+      </div>
+
+      <div class="journal-modal__stage">
+        <span class="ambient-modal__tag">Daily Gratitude &amp; Reflection</span>
+        <h2 class="ambient-modal__title" id="journal-prompt-title">What are you grateful for today?</h2>
+        <p class="ambient-modal__desc" id="journal-prompt-sub">
+          Notice one small thing—a warm drink, someone's kindness, or simply making it through today.
+        </p>
+      </div>
+
+      <form class="journal-paper-card" id="journal-form">
+        <div class="journal-paper-card__row">
+          <label for="journal-gratitude-input" class="micro-label">GRATITUDE TODAY</label>
+          <span class="muted-meta" id="journal-updated-at">Not written yet</span>
+        </div>
+        <input
+          type="text"
+          id="journal-gratitude-input"
+          class="journal-line-input"
+          placeholder="One moment or person I am grateful for..."
+          maxlength="140"
+          autocomplete="off"
+        />
+
+        <label for="journal-notes-input" class="micro-label" style="margin-top:24px;">DAILY JOURNAL</label>
+        <textarea
+          id="journal-notes-input"
+          class="journal-textarea"
+          rows="6"
+          placeholder="Let your thoughts land softly on paper without editing..."
+        ></textarea>
+
+        <div class="journal-paper-card__foot">
+          <div class="journal-day-switcher" id="journal-day-switcher"></div>
+          <button class="btn-ink btn-ink--lg" type="submit">Save Day Journal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MEDITATION SOUNDSCAPE MODAL (NATURE & YOGA) ==================== -->
+  <div class="ambient-modal" id="modal-player" role="dialog" aria-modal="true" aria-label="Meditation Sound Player" hidden>
+    <div class="ambient-modal__backdrop ambient-modal__backdrop--nature"></div>
+    <div class="ambient-modal__inner">
+      <div class="ambient-modal__top">
+        <button class="icon-circle-btn icon-circle-btn--light" id="player-close" type="button" aria-label="Close player">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+        <span class="ambient-modal__day" id="player-kicker">MEDITATION &bull; RELAXING SOUND</span>
+        <button class="text-link text-link--light" id="player-skip" type="button">Next sound</button>
+      </div>
+
+      <div class="ambient-modal__stage">
+        <span class="ambient-modal__tag" id="player-type">Nature Soundscape</span>
+        <h2 class="ambient-modal__title" id="player-title">Forest Rain &amp; Stream</h2>
+        <p class="ambient-modal__desc" id="player-desc">Soft woodland rain and gentle water flow crafted for stillness or yoga.</p>
+
+        <div class="player-controls-row">
+          <button class="btn-rose-pill" id="player-toggle-play" type="button">
+            <span id="player-play-icon">&#9654;</span>
+            <span id="player-play-label">Play</span>
+          </button>
+          <span class="player-timer" id="player-timer">00:00 / 10:00</span>
+        </div>
+      </div>
+
+      <div class="ambient-playlist" id="player-playlist"></div>
+    </div>
+  </div>
+
+  <!-- ==================== GUIDED BREATHING MODAL ==================== -->
+  <div class="modal-sheet" id="modal-breath" role="dialog" aria-modal="true" aria-label="4-4-6 Breath Reset" hidden>
+    <div class="modal-sheet__card modal-sheet__card--narrow">
+      <button class="modal-close-x" id="breath-close" type="button" aria-label="Close breathing guide">&times;</button>
+      <span class="micro-label">7-DAY BREATH RESET &bull; SOMATIC</span>
+      <h2 class="section-serif">Gentle 4-4-6 Cadence</h2>
+      <p class="muted-meta">Follow the orb expansion to lengthen your exhale and ease tightness.</p>
+
+      <div class="breath-ring-stage">
+        <div class="breath-ring" id="breath-ring">
+          <div class="breath-ring__core">
+            <strong id="breath-phase-label">Ready</strong>
+            <span id="breath-count-label">Tap begin</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-ink btn-ink--lg" id="btn-breath-toggle" type="button">Begin Breath Cycle</button>
+    </div>
+  </div>
+
+  <!-- ==================== ARTICLE READER MODAL ==================== -->
+  <div class="modal-sheet" id="modal-article" role="dialog" aria-modal="true" aria-label="Editorial Article" hidden>
+    <div class="modal-sheet__card modal-sheet__card--article">
+      <button class="modal-close-x" id="article-close" type="button" aria-label="Close article">&times;</button>
+      <span class="micro-label" id="article-meta">ARTIKEL &bull; 7 MENIT BACA</span>
+      <h2 class="display-serif article-modal-title" id="article-title">Inside Your Stress PRISM</h2>
+      <div class="article-body" id="article-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== ACCOUNT & LOGOUT MODAL ==================== -->
+  <div class="modal-sheet" id="modal-account" role="dialog" aria-modal="true" aria-label="Account Settings" hidden>
+    <div class="modal-sheet__card modal-sheet__card--mini">
+      <button class="modal-close-x" id="account-modal-close" type="button" aria-label="Close">&times;</button>
+      <span class="micro-label">ACCOUNT</span>
+      <h2 class="section-serif">Your Soulis Space</h2>
+      <p class="muted-meta" id="account-email-display">larissa@soulis.app</p>
+      <div style="margin-top:12px;">
+        <span class="badge-rose" id="account-plan-badge">Soulis Basic</span>
+      </div>
+
+      <form id="name-form" class="name-form">
+        <label for="name-input" class="micro-label">DISPLAY NAME</label>
+        <input type="text" id="name-input" maxlength="24" required placeholder="Your first name" />
+        <button class="btn-ink btn-ink--lg" type="submit">Update name</button>
+      </form>
+
+      <hr class="quiet-divider" style="margin:24px 0;" />
+
+      <button class="btn-outline-pill" id="btn-logout" type="button" style="width:100%;">
+        Log out of account
+      </button>
+    </div>
+  </div>
+
+  <!-- Subtle Toast Notification -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js?v=5"></script>
+</body>
+</html>
